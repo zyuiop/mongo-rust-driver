@@ -7,7 +7,6 @@ use std::{
 
 use rustls::{
     client::ClientConfig,
-    crypto::ring as provider,
     pki_types::{pem::PemObject, CertificateDer, PrivateKeyDer, ServerName},
     Error as TlsError,
     RootCertStore,
@@ -79,7 +78,7 @@ fn make_rustls_config(cfg: TlsOptions) -> Result<rustls::ClientConfig> {
         store.extend(TLS_SERVER_ROOTS.iter().cloned());
     }
 
-    let config_builder = ClientConfig::builder_with_provider(provider::default_provider().into())
+    let config_builder = ClientConfig::builder_with_provider(rustls_graviola::default_provider().into())
         .with_safe_default_protocol_versions()
         .map_err(|e| ErrorKind::InvalidTlsConfig {
             message: format!("built-in provider should support default protocol versions: {e}"),
@@ -141,7 +140,7 @@ fn make_rustls_config(cfg: TlsOptions) -> Result<rustls::ClientConfig> {
         config // mongodb rating: No Fix Needed
             .dangerous()
             .set_certificate_verifier(Arc::new(danger::NoCertVerifier(
-                provider::default_provider(),
+                rustls_graviola::default_provider()
             )));
     }
 

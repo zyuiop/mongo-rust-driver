@@ -120,6 +120,7 @@ webpki-roots = "0.26"
 zstd = { version = "0.11.2", optional = true }
 macro_magic = "0.5.1"
 rustversion = "1.0.20"
+rustls-graviola = "0.2.1"
 
 [dependencies.aws-config]
 version = "1"
@@ -184,7 +185,7 @@ features = ["json", "rustls-tls"]
 version = "0.23.20"
 optional = true
 default-features = false
-features = ["logging", "ring", "std", "tls12"]
+features = ["logging", "std", "tls12"]
 
 [dependencies.serde]
 version = "1.0.125"
@@ -201,7 +202,7 @@ features = ["io-util", "sync", "macros", "net", "process", "rt", "time", "fs"]
 version = "0.26"
 optional = true
 default-features = false
-features = ["logging", "ring", "tls12"]
+features = ["logging", "tls12"]
 
 [dependencies.tokio-util]
 version = "0.7.0"
