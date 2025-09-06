@@ -14,6 +14,8 @@ use hickory_resolver::{
 };
 #[cfg(feature = "gssapi-auth")]
 use std::net::IpAddr;
+use std::net::SocketAddr;
+use hickory_resolver::config::{NameServerConfig, Protocol, ResolverOpts};
 
 /// An async runtime agnostic DNS resolver.
 pub(crate) struct AsyncResolver {
@@ -24,6 +26,14 @@ impl AsyncResolver {
     pub(crate) async fn new(config: Option<ResolverConfig>) -> Result<Self> {
         let resolver = match config {
             Some(config) => hickory_resolver::TokioAsyncResolver::tokio(config, Default::default()),
+
+            #[cfg(target_os = "hermit")]
+            None => {
+                let cfg = ResolverConfig::quad9();
+                hickory_resolver::TokioAsyncResolver::tokio(cfg, Default::default())
+            }
+
+            #[cfg(not(target_os = "hermit"))]
             None => hickory_resolver::TokioAsyncResolver::tokio_from_system_conf()
                 .map_err(Error::from_resolve_error)?,
         };
